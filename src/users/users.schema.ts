@@ -34,4 +34,7 @@ export class User {
   profileImg?: string;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(User).set(
+  'timestamps',
+  true,
+);
