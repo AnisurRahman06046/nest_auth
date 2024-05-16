@@ -52,7 +52,9 @@ export class AuthService {
   }
 
   async allUsers() {
-    const result = await this.userModel.find({});
+    const result = await this.userModel
+      .find({})
+      .select('-password -confirmPassword');
     return result;
   }
 }
