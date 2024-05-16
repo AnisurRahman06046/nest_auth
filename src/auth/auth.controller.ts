@@ -9,6 +9,8 @@ import {
 import { AuthService } from './auth.service';
 import { UserDto } from 'src/users/dto/users.dto';
 import { AuthGuard } from './auth.guard';
+import { Role } from './role.enum';
+import { Roles } from './roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +35,7 @@ export class AuthController {
   }
 
   @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
   @Get('all')
   async users() {
     const result = await this.authService.allUsers();

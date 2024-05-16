@@ -26,7 +26,8 @@ export class User {
   email: string;
   @Prop({ required: false })
   phoneNumber?: string;
-
+  @Prop()
+  roles: string;
   @Prop({ required: false })
   address?: Address;
 

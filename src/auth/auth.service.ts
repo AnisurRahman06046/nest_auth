@@ -46,7 +46,7 @@ export class AuthService {
 
     if (!checkPassword)
       throw new HttpException('invalid credentials', HttpStatus.BAD_REQUEST);
-    const jwtPayload = { sub: user._id, email: user.email };
+    const jwtPayload = { sub: user._id, email: user.email, roles: user.roles };
     const token = await this.jwtService.signAsync(jwtPayload);
     return { access_token: token };
   }
