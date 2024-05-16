@@ -4,9 +4,13 @@ import { Model } from 'mongoose';
 import { UserDto } from 'src/users/dto/users.dto';
 import { User } from 'src/users/users.schema';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private jwtService: JwtService,
+  ) {}
 
   //   register user
   async register(payload: UserDto) {
@@ -27,9 +31,23 @@ export class AuthService {
 
     const result = await this.userModel.create(payloadWithHashedPassword);
     // console.log('after creating')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, confirmPassword, ...userWithoutPassword } =
       result.toObject();
 
     return userWithoutPassword;
+  }
+
+  async login(payload): Promise<{ access_token: string }> {
+    const user = await this.userModel.findOne({ email: payload.email });
+    if (!user)
+      throw new HttpException('User is not found', HttpStatus.NOT_FOUND);
+    const checkPassword = await bcrypt.compare(payload.password, user.password);
+
+    if (!checkPassword)
+      throw new HttpException('invalid credentials', HttpStatus.BAD_REQUEST);
+    const jwtPayload = { sub: user._id, email: user.email };
+    const token = await this.jwtService.signAsync(jwtPayload);
+    return { access_token: token };
   }
 }
