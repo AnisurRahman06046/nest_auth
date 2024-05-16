@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsDateString,
   IsUrl,
+  IsEmail,
 } from 'class-validator';
 
 export class AddressDto {
@@ -24,6 +25,10 @@ export class UserDto {
   @IsNotEmpty({ message: 'Last name is required' })
   @IsString()
   lastName: string;
+
+  @IsEmail()
+  @IsNotEmpty({ message: 'Email is required' })
+  email: string;
 
   @IsNotEmpty({ message: 'Password is required' })
   @IsString()

@@ -22,6 +22,8 @@ export class User {
   @Prop({ required: [true, 'Confirm password is required'] })
   confirmPassword: string;
 
+  @Prop({ required: true, unique: true })
+  email: string;
   @Prop({ required: false })
   phoneNumber?: string;
 

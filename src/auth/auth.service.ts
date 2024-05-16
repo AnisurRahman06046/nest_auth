@@ -19,7 +19,7 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(payload.password, 10); // 10 is the salt rounds
 
     // Replace the plain password with the hashed one in the payload
-    const payloadWithHashedPassword: UserDto = {
+    const payloadWithHashedPassword = {
       ...payload,
       password: hashedPassword,
       confirmPassword: hashedPassword,
@@ -27,6 +27,9 @@ export class AuthService {
 
     const result = await this.userModel.create(payloadWithHashedPassword);
     // console.log('after creating')
-    return result;
+    const { password, confirmPassword, ...userWithoutPassword } =
+      result.toObject();
+
+    return userWithoutPassword;
   }
 }
